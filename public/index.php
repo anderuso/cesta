@@ -8,19 +8,16 @@ $dotenv = Dotenv::createImmutable(__DIR__.'/../');
 $dotenv->load();
 
 $auth = new Auth();
-if (!$auth->isAdmin()) {
-    header('Location: /login.php');
-    exit;
-}
+
 
 // Output DOCTYPE and start of HTML
-echo '<!DOCTYPE html><html><head><title>Cesta</title>';
+echo '<!DOCTYPE html><html><head><title>Knihonauti</title>';
 // Leaflet CSS
 echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">';
 echo '</head><body>';
 
 // Page title and map container
-echo '<h1>Welcome to Cesta</h1>';
+echo '<h1>Knihonauti</h1>';
 echo '<div id="map" style="height:400px;width:100%;margin-top:20px;"></div>';
 
 
@@ -42,7 +39,7 @@ if ($stats) {
         $sumPages += (int)$s['total'];
     }
     // Display sum as km
-    echo "<p>Sum of all pages: {$sumPages} km</p>";
+    echo "<p>Přečteno stránek: {$sumPages} km</p>";
 
     // Determine max total for scaling
     $maxTotal = 0;
@@ -52,7 +49,7 @@ if ($stats) {
         }
     }
 
-    echo '<h2>Class Pages Chart</h2>';
+    echo '<h2>Statistika tříd</h2>';
     echo '<div style="display:flex;align-items:flex-end;justify-content:center;">';
     foreach ($stats as $s) {
         $height = $maxTotal > 0 ? round(($s['total'] / $maxTotal) * 200) : 0;
@@ -113,18 +110,28 @@ var totalDistance = start.distanceTo(end);
 // sumPages is in kilometres
 var blueDistance = sumPages * 1000;
 
-// Dont allow the blue line to extend beyond marker2
-blueDistance = Math.min(blueDistance, totalDistance);
-
-// Fraction of the line covered by sumPages
-var fraction = blueDistance / totalDistance;
-
-// Calculate the point at that fraction
-var blueEnd = L.latLng(start.lat + (end.lat - start.lat) * fraction, start.lng + (end.lng - start.lng) * fraction);
+// Calculate blue line along the path
+var remaining = blueDistance;
+var bluePoints = [markersLatLng[0]];
+for (var i=0; i<markersLatLng.length-1; i++){
+    var segStart = markersLatLng[i];
+    var segEnd = markersLatLng[i+1];
+    var segDist = segStart.distanceTo(segEnd);
+    if (remaining <= segDist){
+        var ratio = remaining / segDist;
+        var lat = segStart.lat + (segEnd.lat - segStart.lat)*ratio;
+        var lng = segStart.lng + (segEnd.lng - segStart.lng)*ratio;
+        bluePoints.push(L.latLng(lat,lng));
+        break;
+    } else {
+        bluePoints.push(segEnd);
+        remaining -= segDist;
+    }
+}
 
 // Draw blue portion
 var blueLine = L.polyline(
-    [start, blueEnd],
+    bluePoints,
     {
         color: "blue",
         weight: 6
