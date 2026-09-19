@@ -41,7 +41,7 @@ class Database
         // Ensure books table exists
         $this->connection->exec("CREATE TABLE IF NOT EXISTS books (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, book_title TEXT, book_author TEXT, class_name TEXT, student_name TEXT, num_pages INTEGER)");
         // Ensure destinations table exists
-        $this->connection->exec("CREATE TABLE IF NOT EXISTS destinations (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name TEXT, `order` INTEGER)");
+        $this->connection->exec("CREATE TABLE IF NOT EXISTS destinations (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name TEXT, `order` INTEGER, lat TEXT, lng TEXT)");
     }
 
     public function getConnection(): PDO
