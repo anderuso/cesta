@@ -38,9 +38,35 @@ $auth = new Auth();
             foreach ($stats as $s) {
                 $sumPages += (int)$s['total'];
             }
-            echo "<p style='text-align:center;color:#666;'>Přečteno stránek: <strong>{$sumPages} km</strong></p>";
+
+            // Calculate total distance between destinations
+            $totalDistance = 0;
+            if (count($destinations) >= 2) {
+                $prevDestination = $destinations[0];
+                for ($i = 1; $i < count($destinations); $i++) {
+                    $currentDestination = $destinations[$i];
+                    $distance = sqrt(
+                        pow($prevDestination['lat'] - $currentDestination['lat'], 2) +
+                        pow($prevDestination['lng'] - $currentDestination['lng'], 2)
+                    ) * 111; // Approximate conversion
+                    $totalDistance += $distance;
+                    $prevDestination = $currentDestination;
+                }
+            } else if (count($destinations) == 1) {
+                $totalDistance = 0.001; // Small distance for single destination
+            }
         ?>
-            <div class="stats-section">
+        <!-- Progress Bar section -->
+        <div class="progress-container">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="progress-bar-info">
+                    <span>Přečteno: <strong><?php echo number_format($sumPages, 0, ',', ' '); ?> km</strong></span>
+                    <span>z <strong><?php echo number_format($totalDistance, 0, ',', ' '); ?> km</strong></span>
+                </div>
+        </div>
+        <div class="stats-section">
                 <h2 style="text-align:center;color:#333;margin-top:0;">📊 Statistika tříd</h2>
                 <div class="stats-container">
                     <?php
@@ -135,7 +161,7 @@ $auth = new Auth();
 
     var remaining = blueDistance;
     var bluePoints = [markersLatLng[0]];
-    for (var i=0; i<markersLatLng.length-1; i++){
+    for (var i = 0; i < markersLatLng.length - 1; i++){
         var segStart = markersLatLng[i];
         var segEnd = markersLatLng[i+1];
         var segDist = segStart.distanceTo(segEnd);
@@ -158,6 +184,22 @@ $auth = new Auth();
             weight: 6
         }
     ).addTo(map);
+    </script>
+    <script>
+        // Animate progress bar
+        var totalDistanceKm = <?php echo number_format($totalDistance, 0, ',', ''); ?>;
+        var progress = sumPages / totalDistanceKm;
+        if (totalDistance > 0) {
+            progress = Math.min(progress, 1);
+        }
+        var progressBar = document.getElementById('progress-bar');
+        
+        // Animate to value
+        setTimeout(function() {
+            if (progressBar) {
+                progressBar.style.width = (progress * 100) + '%';
+            }
+        }, 600);
     </script>
 </body>
 </html>
