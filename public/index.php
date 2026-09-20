@@ -93,15 +93,12 @@ $auth = new Auth();
         
         <!-- Top Right Navigation -->
         <div class="top-right-nav">
-            <a href="login.php">🚀 Přihlásit se</a>
-        </div>
-        
-        <!-- Navigation -->
-        <div class="navigation">
             <?php if (!$auth->isGuest()): ?>
                 <a href="admin/books.php">📚 Knihy</a>
                 <a href="admin/destinations.php">🌍 Cíle</a>
                 <a href="logout.php">🚪 Odhlásit se</a>
+            <?php else: ?>
+                <a href="login.php">🚀 Přihlásit se</a>
             <?php endif; ?>
         </div>
     </div>
