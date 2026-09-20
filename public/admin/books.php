@@ -61,7 +61,7 @@ $books = $db->query('SELECT * FROM books ORDER BY id DESC')->fetchAll();
 </head>
 <body>
 <h1>Books Administration</h1>
-<p><a href="logout.php">Logout</a></p>
+<p><a href="../index.php">Homepage</a></p>
 
 <?php if ($editBook): ?>
     <h2>Edit Book</h2>

@@ -59,7 +59,7 @@ $destinations = $db->query('SELECT * FROM destinations ORDER BY `order` ASC')->f
 </head>
 <body>
 <h1>Destinations Administration</h1>
-<p><a href="logout.php">Logout</a></p>
+<p><a href="../index.php">Homepage</a></p>
 
 <?php if ($editDest): ?>
     <h2>Edit Destination</h2>
