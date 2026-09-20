@@ -1,0 +1,190 @@
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 20px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Map container */
+#map {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    margin: 20px;
+}
+
+/* Statistics section */
+.stats-section {
+    padding: 20px;
+    background: #f9f9f9;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    height: 250px;
+    padding-bottom: 10px;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.stat-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.stat-bar .bar {
+    background: linear-gradient(to top, #667eea, #764ba2);
+    width: 50px;
+    border-radius: 8px 8px 8px 8px;
+    transition: height 0.5s ease;
+    position: relative;
+    min-height: 4px;
+}
+
+.stat-bar .bar:hover {
+    filter: brightness(1.1);
+}
+
+.stat-bar .bar::after {
+    content: attr(data-pages) ' stránek';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+.stat-bar .bar:hover::after {
+    opacity: 1;
+}
+
+.stat-bar span {
+    margin-top: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Navigation */
+.navigation {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    background: #f0f0f0;
+}
+
+nav a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #667eea;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 50%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+}
+
+.progress-bar-container {
+    background: #e0e0e0;
+    border-radius: 25px;
+    overflow: hidden;
+    height: 30px;
+}
+
+.progress-bar {
+    height: 30px;
+    background: linear-gradient(to right, #667eea, #764ba2);
+    border-radius: 25px;
+    width: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 15px;
+}
+
+.progress-bar-info {
+    text-align: center;
+    color: #666;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.progress-bar-info strong {
+    color: #667eea;
+    font-size: 1.3rem;
+}
+
+/* Top Right Navigation */
+.top-right-nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.top-right-nav a {
+    background: white;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #667eea;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.top-right-nav a:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
