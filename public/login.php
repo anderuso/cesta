@@ -1,10 +1,8 @@
 <?php
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/bootstrap.php';
+
 use Dotenv\Dotenv;
 use App\Auth;
-
-$dotenv = Dotenv::createImmutable(__DIR__.'/..');
-$dotenv->load();
 
 $auth = new Auth();
 
@@ -26,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>Admin Login</h1>
     <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
-    <form method="post" action="/login.php">
+    <form method="post" action="login.php">
         <label>Username: <input type="text" name="username" required></label><br>
         <label>Password: <input type="password" name="password" required></label><br>
         <button type="submit">Login</button>

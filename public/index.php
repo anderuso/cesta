@@ -1,11 +1,8 @@
 <?php
-require_once __DIR__.'/../vendor/autoload.php';
-use Dotenv\Dotenv;
+require_once __DIR__.'/bootstrap.php';
+
 use App\Auth;
 use App\Database;
-
-$dotenv = Dotenv::createImmutable(__DIR__.'/../');
-$dotenv->load();
 
 $auth = new Auth();
 
@@ -62,11 +59,11 @@ if ($stats) {
 
 // Auth related navigation
 if ($auth->isGuest()) {
-    echo '<p><a href="/login.php">Login</a></p>';
+    echo '<p><a href="login.php">Login</a></p>';
 } else {
-    echo '<p><a href="/admin/books.php">Books management</a></p>';
-    echo '<p><a href="/admin/destinations.php">Destinations management</a></p>';
-    echo '<p><a href="/logout.php">Logout</a></p>';
+    echo '<p><a href="admin/books.php">Books management</a></p>';
+    echo '<p><a href="admin/destinations.php">Destinations management</a></p>';
+    echo '<p><a href="logout.php">Logout</a></p>';
 }
 ?>
 

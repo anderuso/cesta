@@ -16,7 +16,7 @@ class Database
         $database = $_ENV['DB_DATABASE'];
         $username = $_ENV['DB_USERNAME'];
         $password = $_ENV['DB_PASSWORD'];
-        $socket = $_ENV['DB_SOCKET'];
+        //$socket = $_ENV['DB_SOCKET'];
 
         $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
         //$dsn = "mysql:unix_socket={$socket};dbname={$database};charset=utf8mb4";
@@ -38,10 +38,24 @@ class Database
                 (int) $e->getCode()
             );
         }
-        // Ensure books table exists
-        $this->connection->exec("CREATE TABLE IF NOT EXISTS books (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, book_title TEXT, book_author TEXT, class_name TEXT, student_name TEXT, num_pages INTEGER)");
-        // Ensure destinations table exists
-        $this->connection->exec("CREATE TABLE IF NOT EXISTS destinations (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name TEXT, `order` INTEGER, lat TEXT, lng TEXT)");
+        // Verify books table structure
+        $booksCols = $this->connection->query("SHOW COLUMNS FROM books")->fetchAll(PDO::FETCH_COLUMN);
+        $expectedBooks = ['id','book_title','book_author','class_name','student_name','num_pages'];
+        foreach ($expectedBooks as $col){
+            if (!in_array($col, $booksCols)) {
+                throw new Exception("Missing column '{$col}' in books table");
+            }
+        }
+
+        // Verify destinations table structure
+        $destCols = $this->connection->query("SHOW COLUMNS FROM destinations")->fetchAll(PDO::FETCH_COLUMN);
+        $expectedDest = ['id','name','order','lat','lng'];
+        foreach ($expectedDest as $col){
+            if (!in_array($col, $destCols)) {
+                throw new Exception("Missing column '{$col}' in destinations table");
+            }
+        }
+
     }
 
     public function getConnection(): PDO

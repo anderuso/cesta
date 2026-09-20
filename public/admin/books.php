@@ -1,15 +1,12 @@
 <?php
-require_once __DIR__.'/../../vendor/autoload.php';
-use Dotenv\Dotenv;
+require_once __DIR__.'/../bootstrap.php';
+
 use App\Auth;
 use App\Database;
 
-$dotenv = Dotenv::createImmutable(__DIR__.'/../../');
-$dotenv->load();
-
 $auth = new Auth();
 if (!$auth->isAdmin()) {
-    header('Location: /login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -42,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare('DELETE FROM books WHERE id=?');
         $stmt->execute([$_POST['id'] ?? 0]);
     }
-    header('Location: /admin/books.php');
+    header('Location: books.php');
     exit;
 }
 
@@ -64,11 +61,11 @@ $books = $db->query('SELECT * FROM books ORDER BY id DESC')->fetchAll();
 </head>
 <body>
 <h1>Books Administration</h1>
-<p><a href="/logout.php">Logout</a></p>
+<p><a href="logout.php">Logout</a></p>
 
 <?php if ($editBook): ?>
     <h2>Edit Book</h2>
-    <form method="post" action="/admin/books.php">
+    <form method="post" action="books.php">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id" value="<?=htmlspecialchars($editBook['id'])?>">
         <label>Title: <input type="text" name="book_title" value="<?=htmlspecialchars($editBook['book_title'])?>" required></label><br>
@@ -78,10 +75,10 @@ $books = $db->query('SELECT * FROM books ORDER BY id DESC')->fetchAll();
         <label>Pages: <input type="number" name="num_pages" value="<?=htmlspecialchars($editBook['num_pages'])?>" required min="1"></label><br>
         <button type="submit">Update</button>
     </form>
-    <p><a href="/admin/books.php">Back to list</a></p>
+    <p><a href="books.php">Back to list</a></p>
 <?php else: ?>
     <h2>Add New Book</h2>
-    <form method="post" action="/admin/books.php">
+    <form method="post" action="books.php">
         <input type="hidden" name="action" value="add">
         <label>Title: <input type="text" name="book_title" required></label><br>
         <label>Author: <input type="text" name="book_author" required></label><br>
@@ -104,8 +101,8 @@ $books = $db->query('SELECT * FROM books ORDER BY id DESC')->fetchAll();
 <td><?=htmlspecialchars($b['student_name'])?></td>
 <td><?=htmlspecialchars($b['num_pages'])?></td>
 <td>
-<a href="/admin/books.php?edit=<?=htmlspecialchars($b['id'])?>">Edit</a>
-<form method="post" action="/admin/books.php" style="display:inline;margin-left:5px;" onsubmit="return confirm('Delete?');"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?=htmlspecialchars($b['id'])?>"><button type="submit">Delete</button></form>
+<a href="books.php?edit=<?=htmlspecialchars($b['id'])?>">Edit</a>
+<form method="post" action="books.php" style="display:inline;margin-left:5px;" onsubmit="return confirm('Delete?');"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?=htmlspecialchars($b['id'])?>"><button type="submit">Delete</button></form>
 </td>
 </tr>
 <?php endforeach; ?>

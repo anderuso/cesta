@@ -1,15 +1,12 @@
 <?php
-require_once __DIR__.'/../../vendor/autoload.php';
-use Dotenv\Dotenv;
+require_once __DIR__.'/../bootstrap.php';
+
 use App\Auth;
 use App\Database;
 
-$dotenv = Dotenv::createImmutable(__DIR__.'/../../');
-$dotenv->load();
-
 $auth = new Auth();
 if (!$auth->isAdmin()) {
-    header('Location: /login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -40,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare('DELETE FROM destinations WHERE id=?');
         $stmt->execute([$_POST['id'] ?? 0]);
     }
-    header('Location: /admin/destinations.php');
+    header('Location: destinations.php');
     exit;
 }
 
@@ -57,36 +54,40 @@ $destinations = $db->query('SELECT * FROM destinations ORDER BY `order` ASC')->f
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Destinations – Cesta (Admin)</title>
+    <title>Knihonauti - Administrace cesty</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 <h1>Destinations Administration</h1>
-<p><a href="/logout.php">Logout</a></p>
+<p><a href="logout.php">Logout</a></p>
 
 <?php if ($editDest): ?>
     <h2>Edit Destination</h2>
-    <form method="post" action="/admin/destinations.php">
+    <div style="display:flex;">
+    <form method="post" action="destinations.php">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="id" value="<?=htmlspecialchars($editDest['id'])?>"><label>Name: <input type="text" name="name" value="<?=htmlspecialchars($editDest['name'])?>" required></label><br>
         <label>Latitude: <input type="text" name="latitude" value="<?=htmlspecialchars($editDest['lat'] ?? '')?>"></label><br>
         <label>Longitude: <input type="text" name="longitude" value="<?=htmlspecialchars($editDest['lng'] ?? '')?>"></label><br>
         <label>Order: <input type="number" name="order" value="<?=htmlspecialchars($editDest['order'])?>" required min="0"></label><br>
-        <div id="mapEdit" style="height:300px;margin-top:10px;"></div>
+        <div id="mapEdit" style="height:300px;width:300px;margin-left:20px;"></div>
         <input type="submit" value="Save">
     </form>
-    <p><a href="/admin/destinations.php">Back to list</a></p>
+</div>
+    <p><a href="destinations.php">Back to list</a></p>
 <?php else: ?>
     <h2>Add New Destination</h2>
-    <form method="post" action="/admin/destinations.php">
+    <div style="display:flex;">
+    <form method="post" action="destinations.php">
         <input type="hidden" name="action" value="add">
         <label>Name: <input type="text" name="name" required></label><br>
         <label>Order: <input type="number" name="order" required min="0"></label><br>
         <label>Latitude: <input type="text" name="latitude"></label><br>
         <label>Longitude: <input type="text" name="longitude"></label><br>
-        <div id="mapAdd" style="height:300px;margin-top:10px;"></div>
+        <div id="mapAdd" style="height:300px;width:300px;margin-left:20px;"></div>
         <input type="submit" value="Add">
     </form>
+</div>
 <?php endif; ?>
 
 <h2>Existing Destinations</h2>
@@ -100,8 +101,8 @@ $destinations = $db->query('SELECT * FROM destinations ORDER BY `order` ASC')->f
 <td><?=htmlspecialchars($d['lng'] ?? '')?></td>
 <td><?=htmlspecialchars($d['order'])?></td>
 <td>
-<a href="/admin/destinations.php?edit=<?=htmlspecialchars($d['id'])?>">Edit</a>
-<form method="post" action="/admin/destinations.php" style="display:inline;margin-left:5px;" onsubmit="return confirm('Delete?');"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?=htmlspecialchars($d['id'])?>"><button type="submit">Delete</button></form>
+<a href="destinations.php?edit=<?=htmlspecialchars($d['id'])?>">Edit</a>
+<form method="post" action="destinations.php" style="display:inline;margin-left:5px;" onsubmit="return confirm('Delete?');"><input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="<?=htmlspecialchars($d['id'])?>"><button type="submit">Delete</button></form>
 </td>
 </tr>
 <?php endforeach; ?>
