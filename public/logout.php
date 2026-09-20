@@ -6,5 +6,5 @@ use App\Auth;
 
 $auth = new Auth();
 $auth->logout();
-header('Location: /');
+header('Location: index.php');
 exit;

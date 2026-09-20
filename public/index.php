@@ -16,7 +16,7 @@ $auth = new Auth();
 </head>
 <body>
     <div class="container">
-        <h1>📚 Knihonauti</h1>
+        <h1><img src="ship.png" class="ship"/>&nbsp;Knihonauti&nbsp;<img src="ship.png" class="ship"/></h1>
         
         <!-- Map section -->
         <div id="map" style="height:500px;"></div>
