@@ -66,7 +66,7 @@ $auth = new Auth();
                     <span>z <strong><?php echo number_format($totalDistance, 0, ',', ' '); ?> km</strong></span>
                 </div>
         </div>
-        <div class="stats-section">
+        <div class="stats-section" style="background-image: url('ship.png'); background-size: 50%; background-position: center; background-repeat: no-repeat; background-blend-mode: overlay;">
                 <h2 style="text-align:center;color:#333;margin-top:0;">📊 Statistika tříd</h2>
                 <div class="stats-container">
                     <?php
