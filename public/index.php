@@ -104,6 +104,7 @@ $auth = new Auth();
             <?php if (!$auth->isGuest()): ?>
                 <a href="admin/books.php">📚 Knihy</a>
                 <a href="admin/destinations.php">🌍 Cíle</a>
+                <a href="admin/statistics.php">📊 Statistiky</a>
                 <a href="logout.php">🚪 Odhlásit se</a>
             <?php else: ?>
                 <a href="login.php">🚀 Přihlásit se</a>
