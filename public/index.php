@@ -36,7 +36,7 @@ $auth = new Auth();
         
         if ($stats) {
             foreach ($stats as $s) {
-                $sumPages += (int)$s['total'];
+                $sumPages += (int)$s['total'] * 0.1;
             }
 
             // Calculate total distance between destinations
@@ -124,17 +124,6 @@ $auth = new Auth();
     markersLatLng.push(m<?php echo $d['id'];?>.getLatLng());
     <?php } ?>
     
-    // Add marker Černošice
-    var markerC = L.marker([49.9456349,14.3270674]).addTo(map).bindPopup("Černošice");
-    var markersLatLng = [markerC.getLatLng()];
-    var markersObj = [markerC];
-    
-    <?php foreach($destinations as $d){ ?>
-    var m<?php echo $d['id'];?> = L.marker([<?php echo $d['lat'];?>,<?php echo $d['lng'];?>]).addTo(map).bindPopup("<?php echo $d['name'];?>");
-    markersObj.push(m<?php echo $d['id'];?>);
-    markersLatLng.push(m<?php echo $d['id'];?>.getLatLng());
-    <?php } ?>
-    
     var marker1 = markersObj[0];
     var marker2 = markersObj.length>1 ? markersObj[1] : marker1;
     
@@ -149,7 +138,6 @@ $auth = new Auth();
     
     var line = L.polyline(markersLatLng,{color:"red",weight:4,dashArray:"5,5"}).addTo(map);
 
-    // Blue portion: sumPages kilometres from marker1
     var start = marker1.getLatLng();
     var end   = marker2.getLatLng();
 
