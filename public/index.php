@@ -29,6 +29,15 @@ $auth = new Auth();
         $destStmt = $db->query('SELECT * FROM destinations ORDER BY `order` ASC');
         $destinations = $destStmt->fetchAll();
         
+        // Add Cernosice as first destination
+        array_unshift($destinations, [
+            'id' => 0,
+            'name' => 'Černošice',
+            'lat' => 49.9456349,
+            'lng' => 14.3270674,
+            'order' => -1
+        ]);
+        
         // Fetch class statistics
         $statsQuery = $db->query('SELECT class_name, SUM(num_pages) AS total FROM books GROUP BY class_name');
         $stats = $statsQuery->fetchAll();
@@ -39,7 +48,7 @@ $auth = new Auth();
                 $sumPages += (int)$s['total'] * 0.1;
             }
 
-            // Calculate total distance between destinations
+            // Calculate total distance between all destinations (Cernosice + DB destinations)
             $totalDistance = 0;
             if (count($destinations) >= 2) {
                 $prevDestination = $destinations[0];
@@ -53,7 +62,7 @@ $auth = new Auth();
                     $prevDestination = $currentDestination;
                 }
             } else if (count($destinations) == 1) {
-                $totalDistance = 0.001; // Small distance for single destination
+                $totalDistance = 0; // No distance to calculate
             }
         ?>
         <!-- Progress Bar section -->
@@ -62,8 +71,7 @@ $auth = new Auth();
                 <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
             </div>
             <div class="progress-bar-info">
-                    <span>Přečteno: <strong><?php echo number_format($sumPages, 0, ',', ' '); ?> km</strong></span>
-                    <span>z <strong><?php echo number_format($totalDistance, 0, ',', ' '); ?> km</strong></span>
+                    <span>Přečteno <strong><?php echo number_format($sumPages * 10, 0, ',', ' '); ?></strong> stránek, <strong><?php echo number_format($sumPages, 1, ',', ' '); ?> km</strong> z <strong><?php echo number_format($totalDistance, 0, ',', ' '); ?> km</strong></span>
                 </div>
         </div>
         <div class="stats-section" style="background-image: url('ship.png'); background-size: 50%; background-position: center; background-repeat: no-repeat; background-blend-mode: overlay;">
@@ -113,13 +121,11 @@ $auth = new Auth();
         attribution:"© OpenStreetMap contributors"
     }).addTo(map);
     
-    // Add marker Černošice
-    var markerC = L.marker([49.9456349,14.3270674]).addTo(map).bindPopup("Černošice");
-    var markersLatLng = [markerC.getLatLng()];
-    var markersObj = [markerC];
-    
+    markersObj = [];
+    markersLatLng = [];
+
     <?php foreach($destinations as $d){ ?>
-    var m<?php echo $d['id'];?> = L.marker([<?php echo $d['lat'];?>,<?php echo $d['lng'];?>]).addTo(map).bindPopup("<?php echo $d['name'];?>");
+    var m<?php echo $d['id'];?> = L.marker([<?php echo $d['lat'];?>,<?php echo $d['lng'];?>]).addTo(map).bindPopup("<?php echo htmlspecialchars($d['name']);?>");
     markersObj.push(m<?php echo $d['id'];?>);
     markersLatLng.push(m<?php echo $d['id'];?>.getLatLng());
     <?php } ?>
