@@ -13,14 +13,29 @@ if (!$auth->isAdmin()) {
 $database = new Database();
 $db = $database->getConnection();
 
-// Get top 20 students ordered by total pages (most pages at the top)
-$students = $db->query('
+// Get top 20 students for classes 1-5 (primary school)
+$studentsPrimary = $db->query('
     SELECT 
         student_name,
         class_name,
         SUM(num_pages) as total_pages
     FROM books
     WHERE class_name != "učitelé"
+    AND class_name LIKE "1%" OR class_name LIKE "2%" OR class_name LIKE "3%" OR class_name LIKE "4%" OR class_name LIKE "5%"
+    GROUP BY student_name, class_name
+    ORDER BY total_pages DESC
+    LIMIT 20
+')->fetchAll();
+
+// Get top 20 students for classes 6-9 (secondary school)
+$studentsSecondary = $db->query('
+    SELECT 
+        student_name,
+        class_name,
+        SUM(num_pages) as total_pages
+    FROM books
+    WHERE class_name != "učitelé"
+    AND class_name LIKE "6%" OR class_name LIKE "7%" OR class_name LIKE "8%" OR class_name LIKE "9%"
     GROUP BY student_name, class_name
     ORDER BY total_pages DESC
     LIMIT 20
@@ -59,7 +74,7 @@ $authors = $db->query('
 <h1>Student Statistics</h1>
 <p><a href="../index.php">Homepage</a> | <a href="books.php">Books</a></p>
 
-<h2>Top 20 žáků s největším počtem stran</h2>
+<h2>Top 20 žáků - 1. stupeň (1. - 5. třída)</h2>
 <table border="1" cellpadding="3" cellspacing="0">
 <tr>
     <th>Pořadí</th>
@@ -68,7 +83,26 @@ $authors = $db->query('
     <th>Celkem stránek</th>
 </tr>
 <?php $rank = 1; ?>
-<?php foreach ($students as $student): ?>
+<?php foreach ($studentsPrimary as $student): ?>
+<tr>
+    <td><?=htmlspecialchars($rank++)?></td>
+    <td><?=htmlspecialchars($student['student_name'])?></td>
+    <td><?=htmlspecialchars($student['class_name'])?></td>
+    <td><?=htmlspecialchars($student['total_pages'])?></td>
+</tr>
+<?php endforeach; ?>
+</table>
+
+<h2>Top 20 žáků - 2. stupeň (6. - 9. třída)</h2>
+<table border="1" cellpadding="3" cellspacing="0">
+<tr>
+    <th>Pořadí</th>
+    <th>Žák</th>
+    <th>Třída</th>
+    <th>Celkem stránek</th>
+</tr>
+<?php $rank = 1; ?>
+<?php foreach ($studentsSecondary as $student): ?>
 <tr>
     <td><?=htmlspecialchars($rank++)?></td>
     <td><?=htmlspecialchars($student['student_name'])?></td>
